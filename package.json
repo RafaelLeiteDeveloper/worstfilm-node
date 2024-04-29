@@ -1,0 +1,22 @@
+{
+  "name": "worstfilm_node",
+  "version": "1.0.0",
+  "description": "Node.js application for handling movie data",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "npx jest"
+  },
+  "keywords": [],
+  "author": "Rafael Leite",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "express": "^4.17.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Dependências instaladas
+/node_modules
+
+# Logs e saída de construção
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Diretório de construção
+/build
+
+# Arquivos de ambiente
+.env
+
+# Dependências específicas do IDE
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos de configuração de usuário
+.eslintcache
