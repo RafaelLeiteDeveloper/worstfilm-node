@@ -1,5 +1,4 @@
 const movieRepository = require('../repositories/MovieRepository');
-
 const MIN_INTERVAL = 1;
 
 class ProducerDTO {
@@ -47,9 +46,7 @@ class MovieProcessor {
   calculateMaxDistanceEachProducer(films) {
       for (const producer of films) {
           const years = producer.years;
-          console.log(years)
           if (years.length > MIN_INTERVAL) {
-            console.log(2)
               this.calculateMaxDistanceForProducer(years, producer);
           }
       }
@@ -69,7 +66,6 @@ class MovieProcessor {
       producer.intervalMax = this.getMaxInterval(producer.interval);
       producer.intervalMin = this.getMinInterval(producer.interval);
 
-      console.log(producer)
   }
 
   getExtremeInterval(producers, comparator) {
@@ -133,7 +129,7 @@ class MovieProcessor {
     films.forEach(obj => {
         obj.intervalMax.forEach(min => {
             maxDistanceDTOS.push({
-                producer: obj.producers,
+                producer: obj.producer,
                 interval: min.interval,
                 followingWin: min.followingWin,
                 previousWin: min.previousWin
@@ -144,7 +140,7 @@ class MovieProcessor {
     films.forEach(obj => {
         obj.intervalMin.forEach(min => {
             minDistanceDTOS.push({
-                producer: obj.producers,
+                producer: obj.producer,
                 interval: min.interval,
                 followingWin: min.followingWin,
                 previousWin: min.previousWin
@@ -152,8 +148,10 @@ class MovieProcessor {
         });
     });
 
-
-      return new ProducerData(this.getProducersWithMinInterval(minDistanceDTOS), this.getProducersWithMaxInterval(maxDistanceDTOS));
+    return new ProducerData(
+        this.getProducersWithMinInterval(minDistanceDTOS),
+        this.getProducersWithMaxInterval(maxDistanceDTOS)
+    );
   }
 
   getProducersWithMinInterval(producersList) {
