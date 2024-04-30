@@ -1,5 +1,7 @@
 const movieRepository = require('../repositories/MovieRepository');
 
+const MIN_INTERVAL = 1;
+
 class ProducerDTO {
   constructor(producer, interval, previousWin, followingWin) {
       this.producer = producer;
@@ -27,10 +29,13 @@ class ProducersIntervalDTO {
 class MovieProcessor {
 
   async findMinAndMax() {
-      console.log('aqui')
       const films = await movieRepository.findAll(); 
-      const updatedFilms = this.separateFilmsWithMultipleProducers(films);
+      const winners = films.filter(movie => movie.winner === 'yes');
+      
+      const updatedFilms = this.separateFilmsWithMultipleProducers(winners);
+      
       this.calculateMaxDistanceEachProducer(updatedFilms);
+      
       return this.printUpdatedFilmsList(updatedFilms);
   }
 
@@ -42,7 +47,9 @@ class MovieProcessor {
   calculateMaxDistanceEachProducer(films) {
       for (const producer of films) {
           const years = producer.years;
-          if (years.length > this.MIN_INTERVAL) {
+          console.log(years)
+          if (years.length > MIN_INTERVAL) {
+            console.log(2)
               this.calculateMaxDistanceForProducer(years, producer);
           }
       }
@@ -61,6 +68,8 @@ class MovieProcessor {
 
       producer.intervalMax = this.getMaxInterval(producer.interval);
       producer.intervalMin = this.getMinInterval(producer.interval);
+
+      console.log(producer)
   }
 
   getExtremeInterval(producers, comparator) {
@@ -117,20 +126,32 @@ class MovieProcessor {
   }
 
   printUpdatedFilmsList(films) {
-      const maxDistanceDTOS = [];
-      const minDistanceDTOS = [];
 
-      for (const obj of films) {
-          for (const min of obj.intervalMax) {
-              maxDistanceDTOS.push(new ProducerDTO(obj.producer, min.interval, min.previousWin, min.followingWin));
-          }
-      }
+    let maxDistanceDTOS = [];
+    let minDistanceDTOS = [];
+    
+    films.forEach(obj => {
+        obj.intervalMax.forEach(min => {
+            maxDistanceDTOS.push({
+                producer: obj.producers,
+                interval: min.interval,
+                followingWin: min.followingWin,
+                previousWin: min.previousWin
+            });
+        });
+    });
+    
+    films.forEach(obj => {
+        obj.intervalMin.forEach(min => {
+            minDistanceDTOS.push({
+                producer: obj.producers,
+                interval: min.interval,
+                followingWin: min.followingWin,
+                previousWin: min.previousWin
+            });
+        });
+    });
 
-      for (const obj of films) {
-          for (const min of obj.intervalMin) {
-              minDistanceDTOS.push(new ProducerDTO(obj.producer, min.interval, min.previousWin, min.followingWin));
-          }
-      }
 
       return new ProducerData(this.getProducersWithMinInterval(minDistanceDTOS), this.getProducersWithMaxInterval(maxDistanceDTOS));
   }
