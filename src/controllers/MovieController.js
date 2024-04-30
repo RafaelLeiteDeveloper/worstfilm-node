@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/movie/search/winners/interval', async (req, res) => {
   try {
-    const result = await movieService.findWinnersInterval();
+    const result = await movieService.MovieProcessor.findMinAndMax();
     res.json(result);
   } catch (error) {
     console.error('Error:', error);
